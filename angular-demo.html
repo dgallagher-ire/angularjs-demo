@@ -5,128 +5,137 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>S3-RedShift Loader</title>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-	crossorigin="anonymous">
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-	crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-	angular.module('s3RedShiftApp', []).controller('s3RedShiftAppController', function() {
-		var mydata = this;
-		
-		mydata.header = ['Bucket','Live','Files','Batch','RedShift',''];
-		
-		mydata.data = [ 
-			{bucket : 'Surplus', live : true, files : 10000, batch : 1000, redshift :  'harvest.surplus'},
-			{bucket : 'Backup', live : true, files : 10000, batch : 1000, redshift :  'ds.backup'},
-			{bucket : 'Logs', live : false, files : 250000, batch : 20000, redshift :  'harvest.logs'},
-			];
-	});
+	angular.module('s3RedShiftApp', []).controller(
+			's3RedShiftAppController',
+			function() {
+				var mydata = this;
+
+				mydata.header = [ 'Bucket', 'Live', 'Files', 'Batch',
+						'RedShift', '' ];
+
+				mydata.data = [ {
+					bucket : 'Surplus',
+					live : true,
+					files : 10000,
+					batch : 1000,
+					redshift : 'harvest.surplus'
+				}, {
+					bucket : 'Backup',
+					live : true,
+					files : 10000,
+					batch : 1000,
+					redshift : 'ds.backup'
+				}, {
+					bucket : 'Logs',
+					live : false,
+					files : 250000,
+					batch : 20000,
+					redshift : 'harvest.logs'
+				}, ];
+			});
 </script>
-<script type="text/javascript"
-	src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-      google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['Work',     11],
-          ['Eat',      2],
-          ['Commute',  2],
-          ['Watch TV', 2],
-          ['Sleep',    7]
-        ]);
+	google.charts.load("current", {
+		packages : [ "corechart" ]
+	});
+	google.charts.setOnLoadCallback(drawChart);
+	function drawChart() {
+		var data = google.visualization.arrayToDataTable([
+				[ 'Task', 'Hours per Day' ], [ 'Work', 11 ], [ 'Eat', 2 ],
+				[ 'Commute', 2 ], [ 'Watch TV', 2 ], [ 'Sleep', 7 ] ]);
 
-        var options = {
-          title: 'My Daily Activities',
-          is3D: true,
-        };
+		var options = {
+			title : 'My Daily Activities',
+			is3D : true,
+		};
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-        chart.draw(data, options);
-      }
-    </script>
+		var chart = new google.visualization.PieChart(document
+				.getElementById('piechart_3d'));
+		chart.draw(data, options);
+	}
+</script>
 </head>
 <body ng-controller="s3RedShiftAppController as mydata">
 	<div class="container">
-		<h3 class="page-header">S3-RedShift Loader</h3>
+		<div>
+			<h3 class="page-header">S3-RedShift Loader</h3>
+		</div>
+		<div>
+			<table class="table table-hover table-condensed">
+				<thead>
+					<tr class="info">
+						<th ng-repeat="head in mydata.header">{{head}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="row in mydata.data">
+						<td>{{row.bucket}}</td>
+						<td ng-if="row.live == true"><span
+							class="label label-success">Yes</span></td>
+						<td ng-if="row.live == false"><span
+							class="label label-danger">No</span></td>
+						<td>{{row.files}}</td>
+						<td>{{row.batch}}</td>
+						<td>{{row.redshift}}</td>
+						<td><a href="#myForm"><button type="button" class="btn btn-info btn-xs">Edit</button></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div>
+			<form id="myForm">
+				<div class="form-group">
+					<label for="exampleInputBucket">Bucket</label> <select
+						class="form-control" id="exampleInputBucket">
+						<option disabled selected></option>
+						<option>dgallagher.surplus</option>
+						<option>dgallagher.files</option>
+						<option>dgallagher.lambda</option>
+						<option>dgallagher.store</option>
+						<option>dgallagher.glacier</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="exampleInputBucket">Live</label> <select
+						class="form-control" id="exampleInputBucket">
+						<option disabled selected></option>
+						<option>No</option>
+						<option>Yes</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">Files</label> <input type="text"
+						class="form-control" id="exampleInputPassword1"
+						placeholder="Number 1 - 1,000,000">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">Batch</label> <input type="text"
+						class="form-control" id="exampleInputPassword1"
+						placeholder="Number 1 - 1,000">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputBucket">RedShift</label> <select
+						class="form-control" id="exampleInputBucket">
+						<option disabled selected></option>
+						<option>harvest.surplus</option>
+						<option>ds.files</option>
+						<option>lambda</option>
+						<option>files.store</option>
+					</select>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>
+		<div id="piechart_3d"></div>
+		<div>
+			<br>
+		</div>
 	</div>
-	<div class="container">
-		<table class="table table-hover table-condensed">
-			<thead>
-				<tr class="info">
-					<th ng-repeat="head in mydata.header">{{head}}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="row in mydata.data">
-					<td>{{row.bucket}}</td>
-					<td ng-if="row.live == true"><span class="label label-success">Yes</span></td>
-					<td ng-if="row.live == false"><span class="label label-danger">No</span></td>
-					<td>{{row.files}}</td>
-					<td>{{row.batch}}</td>
-					<td>{{row.redshift}}</td>
-					<td><button type="button" class="btn btn-info btn-xs">Edit</button></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="container">
-		<form>
-			<div class="form-group">
-				<label for="exampleInputBucket">Bucket</label> <select
-					class="form-control" id="exampleInputBucket">
-					<option disabled selected></option>
-					<option>dgallagher.surplus</option>
-					<option>dgallagher.files</option>
-					<option>dgallagher.lambda</option>
-					<option>dgallagher.store</option>
-					<option>dgallagher.glacier</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="exampleInputBucket">Live</label> <select
-					class="form-control" id="exampleInputBucket">
-					<option disabled selected></option>
-					<option>No</option>
-					<option>Yes</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="exampleInputPassword1">Files</label> <input type="text"
-					class="form-control" id="exampleInputPassword1"
-					placeholder="Number 1 - 1,000,000">
-			</div>
-			<div class="form-group">
-				<label for="exampleInputPassword1">Batch</label> <input type="text"
-					class="form-control" id="exampleInputPassword1"
-					placeholder="Number 1 - 1,000">
-			</div>
-			<div class="form-group">
-				<label for="exampleInputBucket">RedShift</label> <select
-					class="form-control" id="exampleInputBucket">
-					<option disabled selected></option>
-					<option>harvest.surplus</option>
-					<option>ds.files</option>
-					<option>lambda</option>
-					<option>files.store</option>
-				</select>
-			</div>
-			<button type="submit" class="btn btn-primary">Submit</button>
-		</form>
-	</div>
-	<div class="container" id="piechart_3d"></div>
-	<div class="container">
-		<br>
-	</div>
-
 </body>
 </html>
