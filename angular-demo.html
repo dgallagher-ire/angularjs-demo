@@ -12,16 +12,16 @@
 <script type="text/javascript">
 	angular.module('s3RedShiftApp', []).controller(
 			's3RedShiftAppController',
-			function($scope) {
+			function($scope, $window) {
 				var mydata = this;
 				
-				mydata.selectedOpt = null;
-
-				mydata.header = ['Bucket', 'Live', 'Files', 'Batch', 'RedShift', ''];
+				mydata.selectedBucket = null;
 				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
 
+				mydata.header = ['Bucket', 'Live', 'Files', 'Batch', 'RedShift', ''];
+
 				mydata.data = [ {
-					bucket : 'Surplus',
+					bucket : 'dgallagher.surplus',
 					live : true,
 					files : 10000,
 					batch : 1000,
@@ -39,6 +39,13 @@
 					batch : 20000,
 					redshift : 'harvest.logs'
 				}, ];
+				
+				mydata.edit = function(bucketName){
+					$window.alert(bucketName);
+					mydata.selectedBucket = bucketName;
+				}
+				
+				
 			});
 </script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -85,7 +92,7 @@
 						<td>{{row.files}}</td>
 						<td>{{row.batch}}</td>
 						<td>{{row.redshift}}</td>
-						<td><a href="#myForm"><button type="button" class="btn btn-info btn-xs">Edit</button></a></td>
+						<td><a href="#myForm"><button type="button" ng-click="mydata.edit(row.bucket)" class="btn btn-info btn-xs">Edit</button></a></td>
 					</tr>
 				</tbody>
 			</table>
@@ -94,7 +101,7 @@
 			<form id="myForm">
 				<div class="form-group">
 					<label for="exampleInputBucket">Bucket</label>
-					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedOpt" ng-options="opt as opt for opt in mydata.buckets">
+					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedBucket" ng-options="opt as opt for opt in mydata.buckets">
 						<option disabled selected></option>
 					</select>
 				</div>
