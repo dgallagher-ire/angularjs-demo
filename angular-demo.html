@@ -12,11 +12,13 @@
 <script type="text/javascript">
 	angular.module('s3RedShiftApp', []).controller(
 			's3RedShiftAppController',
-			function() {
+			function($scope) {
 				var mydata = this;
+				
+				mydata.selectedOpt = null;
 
-				mydata.header = [ 'Bucket', 'Live', 'Files', 'Batch',
-						'RedShift', '' ];
+				mydata.header = ['Bucket', 'Live', 'Files', 'Batch', 'RedShift', ''];
+				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
 
 				mydata.data = [ {
 					bucket : 'Surplus',
@@ -91,14 +93,9 @@
 		<div>
 			<form id="myForm">
 				<div class="form-group">
-					<label for="exampleInputBucket">Bucket</label> <select
-						class="form-control" id="exampleInputBucket">
+					<label for="exampleInputBucket">Bucket</label>
+					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedOpt" ng-options="opt as opt for opt in mydata.buckets">
 						<option disabled selected></option>
-						<option>dgallagher.surplus</option>
-						<option>dgallagher.files</option>
-						<option>dgallagher.lambda</option>
-						<option>dgallagher.store</option>
-						<option>dgallagher.glacier</option>
 					</select>
 				</div>
 				<div class="form-group">
@@ -120,8 +117,8 @@
 						placeholder="Number 1 - 1,000">
 				</div>
 				<div class="form-group">
-					<label for="exampleInputBucket">RedShift</label> <select
-						class="form-control" id="exampleInputBucket">
+					<label for="exampleInputBucket">RedShift</label> 
+					<select class="form-control" id="exampleInputBucket">
 						<option disabled selected></option>
 						<option>harvest.surplus</option>
 						<option>ds.files</option>
