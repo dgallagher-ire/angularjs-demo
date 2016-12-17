@@ -21,7 +21,7 @@
 					mydata.filterText = null;
 					this.filterProcess();
 				}
-				
+				// filter processor
 				mydata.filterProcess = function() {
 					console.log('Filter:'+mydata.filterText);
 					if(mydata.filterText == null || mydata.filterText == ''){
@@ -62,7 +62,7 @@
 				// form alert
 				mydata.showAlert = false;
 				mydata.alertMessage = null;
-				
+				// close alert
 				mydata.closeAlert = function(){
 					mydata.showAlert = false;
 					mydata.alertMessage = null;
@@ -125,8 +125,15 @@
 					return true;
 				}
 
-				// table data
-				mydata.header = ['Bucket', 'Live', 'Files', 'Batch', 'RedShift', ''];
+				// table header
+				mydata.header = [
+					{name: 'Bucket', setting : ''},
+					{name: 'Live', setting : ''},
+					{name: 'Files', setting : ''},
+					{name: 'Batch', setting : 'hidden-xs'},
+					{name: 'RedShift', setting : 'hidden-xs'},
+					{name: '', setting : ''}
+					];
 
 				// table data
 				mydata.data = [ {
@@ -247,7 +254,7 @@
 			<table class="table table-hover table-condensed">
 				<thead>
 					<tr class="info">
-						<th ng-repeat="head in mydata.header">{{head}}</th>
+						<th class="{{head.setting}}" ng-repeat="head in mydata.header">{{head.name}}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -256,8 +263,8 @@
 						<td ng-if="row.live == true"><span class="label label-success">Yes</span></td>
 						<td ng-if="row.live == false"><span class="label label-danger">No</span></td>
 						<td>{{row.files}}</td>
-						<td>{{row.batch}}</td>
-						<td>{{row.redshift}}</td>
+						<td class="hidden-xs">{{row.batch}}</td>
+						<td class="hidden-xs">{{row.redshift}}</td>
 						<td><a href="#myForm"><button type="button" ng-click="mydata.edit(row.bucket)" class="btn btn-info btn-xs">Edit</button></a></td>
 					</tr>
 				</tbody>
