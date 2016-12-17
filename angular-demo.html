@@ -15,6 +15,14 @@
 			function($scope, $window) {
 				var mydata = this;
 				
+				// sorting
+				mydata.sortKey = 'bucket';
+				mydata.sortInvert = false;
+				mydata.setSorting = function(key){
+					mydata.sortKey = key;
+					mydata.sortInvert = !mydata.sortInvert;
+				}
+				
 				// filter
 				mydata.filterText = null;
 				mydata.clearFilter = function(){
@@ -34,10 +42,10 @@
 						var passed = false;
 						for (i = 0; i < parts.length; ++i) {
 							var part = parts[i];
-							if (row.bucket.toUpperCase().includes(part)){
+							if (row.Bucket.toUpperCase().includes(part)){
 								passed = true;
 								continue;
-							} else if (row.redshift.toUpperCase().includes(part)){
+							} else if (row.RedShift.toUpperCase().includes(part)){
 								passed = true;
 								continue;
 							}
@@ -103,7 +111,7 @@
 				mydata.validateNew = function(){
 					var result = true;
 					angular.forEach(mydata.data, function(item){
-						if(item.bucket == mydata.selectedBucket){
+						if(item.Bucket == mydata.selectedBucket){
 							mydata.alertMessage = 'Loader already exists for bucket: '+mydata.selectedBucket;
 							mydata.showAlert = true;
 							result = false;
@@ -113,7 +121,7 @@
 						return false;
 					}
 					angular.forEach(mydata.data, function(item){
-						if(item.redshift == mydata.selectedRedshift){
+						if(item.RedShift == mydata.selectedRedshift){
 							mydata.alertMessage = 'Loader already exists for RedShift: '+mydata.selectedRedshift;
 							mydata.showAlert = true;
 							result = false;
@@ -132,29 +140,28 @@
 					{name: 'Files', setting : ''},
 					{name: 'Batch', setting : 'hidden-xs'},
 					{name: 'RedShift', setting : 'hidden-xs'},
-					{name: '', setting : ''},
 					{name: '', setting : ''}
 					];
 
 				// table data
 				mydata.data = [ {
-					bucket : 'dgallagher.surplus',
-					live : true,
-					files : 10000,
-					batch : 1000,
-					redshift : 'harvest.surplus'
+					Bucket : 'dgallagher.surplus',
+					Live : true,
+					Files : 10000,
+					Batch : 1000,
+					RedShift : 'harvest.surplus'
 				}, {
-					bucket : 'dgallagher.files',
-					live : true,
-					files : 10000,
-					batch : 1000,
-					redshift : 'ds.backup'
+					Bucket : 'dgallagher.files',
+					Live : true,
+					Files : 10000,
+					Batch : 1000,
+					RedShift : 'ds.backup'
 				}, {
-					bucket : 'dgallagher.store',
-					live : false,
-					files : 250000,
-					batch : 20000,
-					redshift : 'harvest.logs'
+					Bucket : 'dgallagher.store',
+					Live : false,
+					Files : 250000,
+					Batch : 20000,
+					RedShift : 'harvest.logs'
 				}, ];
 				
 				mydata.filteredData = mydata.data;
@@ -162,18 +169,18 @@
 				// display selected table row, based on bucket name
 				mydata.edit = function(bucketName){
 					angular.forEach(mydata.data, function(item){
-						if(item.bucket == bucketName){
+						if(item.Bucket == bucketName){
 							//console.log(bucketName);
 							mydata.showAlert = false;
 							mydata.selectedBucket = bucketName;
-							mydata.selectedRedshift = item.redshift;
-							if(item.live){
+							mydata.selectedRedshift = item.RedShift;
+							if(item.Live){
 								mydata.selectedStatus = 'Yes';
 							} else{
 								mydata.selectedStatus = 'No';
 							}
-							mydata.selectedFiles = item.files;
-							mydata.selectedBatch = item.batch;
+							mydata.selectedFiles = item.Files;
+							mydata.selectedBatch = item.Batch;
 						}
 						
 					});
@@ -255,23 +262,23 @@
 			<table class="table table-hover table-condensed">
 				<thead>
 					<tr class="info">
-						<th class="{{head.setting}}" ng-repeat="head in mydata.header">{{head.name}}</th>
+						<th style="cursor: pointer" class="{{head.setting}}" ng-repeat="head in mydata.header" ng-click="mydata.setSorting(head.name)">{{head.name}}</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="row in mydata.filteredData">
-						<td>{{row.bucket}}</td>
-						<td ng-if="row.live == true"><span class="label label-success">Yes</span></td>
-						<td ng-if="row.live == false"><span class="label label-danger">No</span></td>
-						<td>{{row.files}}</td>
-						<td class="hidden-xs">{{row.batch}}</td>
-						<td class="hidden-xs">{{row.redshift}}</td>
+					<tr ng-repeat="row in mydata.filteredData | orderBy:mydata.sortKey:mydata.sortInvert">
+						<td>{{row.Bucket}}</td>
+						<td ng-if="row.Live == true"><span class="label label-success">Yes</span></td>
+						<td ng-if="row.Live == false"><span class="label label-danger">No</span></td>
+						<td>{{row.Files}}</td>
+						<td class="hidden-xs">{{row.Batch}}</td>
+						<td class="hidden-xs">{{row.RedShift}}</td>
 						<td>
-							<a href="#myForm"><button type="button" ng-click="mydata.edit(row.bucket)" class="btn btn-info btn-xs">Edit</button></a>
+							<a href="#myForm"><button type="button" ng-click="mydata.edit(row.Bucket)" class="btn btn-info btn-xs">Edit</button></a>
 						</td>
-						<td>
+						<!-- <td>
 							<a href="" target="_blank"><button type="button" class="btn btn-warning btn-xs">Log</button></a>
-						</td>
+						</td> -->
 					</tr>
 				</tbody>
 			</table>
