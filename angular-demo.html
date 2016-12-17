@@ -15,6 +15,27 @@
 			function($scope, $window) {
 				var mydata = this;
 				
+				// filter
+				mydata.filterText = null;
+				mydata.clearFilter = function(){
+					mydata.filterText = null;
+					this.filterProcess();
+				}
+				
+				mydata.filterProcess = function() {
+					console.log('Filter:'+mydata.filterText);
+						if(mydata.filterText == null || mydata.filterText == ''){
+							mydata.filteredData = mydata.data;
+							return;
+						}
+						mydata.filteredData = [];
+						angular.forEach(mydata.data, function(row) {
+							if (row.bucket.toUpperCase().includes(mydata.filterText.toUpperCase())){
+								mydata.filteredData.push(row);
+							}
+						});
+				};
+				
 				// form data
 				mydata.selectedBucket = null;
 				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
@@ -115,6 +136,8 @@
 					redshift : 'harvest.logs'
 				}, ];
 				
+				mydata.filteredData = mydata.data;
+				
 				// display selected table row, based on bucket name
 				mydata.edit = function(bucketName){
 					angular.forEach(mydata.data, function(item){
@@ -203,6 +226,10 @@
 		<div>
 			<h3 class="page-header">S3-RedShift Loader</h3>
 		</div>
+		<div class="form-group has-feedback input-group-sm">
+			<input ng-model="mydata.filterText" ng-change="mydata.filterProcess()" type="search" class="form-control" aria-describedby="inputError2Status" placeholder="filter...">
+			<span ng-click="mydata.clearFilter()" class="glyphicon glyphicon-remove form-control-feedback" style="pointer-events: initial; color: #31b0d5; cursor: pointer;"></span>
+		</div>
 		<div>
 			<table class="table table-hover table-condensed">
 				<thead>
@@ -211,7 +238,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="row in mydata.data">
+					<tr ng-repeat="row in mydata.filteredData">
 						<td>{{row.bucket}}</td>
 						<td ng-if="row.live == true"><span class="label label-success">Yes</span></td>
 						<td ng-if="row.live == false"><span class="label label-danger">No</span></td>
