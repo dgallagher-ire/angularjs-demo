@@ -58,6 +58,7 @@
 				};
 				
 				// form data
+				mydata.selectedId = null;
 				mydata.selectedBucket = null;
 				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
 				mydata.selectedRedshift = null;
@@ -145,18 +146,21 @@
 
 				// table data
 				mydata.data = [ {
+					id : 0,
 					Bucket : 'dgallagher.surplus',
 					Live : true,
 					Files : 10000,
 					Batch : 1000,
 					RedShift : 'harvest.surplus'
 				}, {
+					id : 1,
 					Bucket : 'dgallagher.files',
 					Live : true,
 					Files : 10000,
 					Batch : 1000,
 					RedShift : 'ds.backup'
 				}, {
+					id : 2,
 					Bucket : 'dgallagher.store',
 					Live : false,
 					Files : 250000,
@@ -166,13 +170,13 @@
 				
 				mydata.filteredData = mydata.data;
 				
-				// display selected table row, based on bucket name
-				mydata.edit = function(bucketName){
-					angular.forEach(mydata.data, function(item){
-						if(item.Bucket == bucketName){
-							//console.log(bucketName);
+				// display selected table row, based on id
+				mydata.edit = function(id){
+					angular.forEach(mydata.data, function(item){ // use foreach demo could use index
+						if(item.id == id){
 							mydata.showAlert = false;
-							mydata.selectedBucket = bucketName;
+							mydata.selectedId = item.id;
+							mydata.selectedBucket = item.Bucket;
 							mydata.selectedRedshift = item.RedShift;
 							if(item.Live){
 								mydata.selectedStatus = 'Yes';
@@ -189,6 +193,7 @@
 				// clear bucket
 				mydata.clear = function(bucketName){
 					mydata.showAlert = false;
+					mydata.selectedId = null;
 					mydata.selectedBucket = null;
 					mydata.selectedRedshift = null;
 					mydata.selectedStatus = null;
@@ -202,6 +207,18 @@
 						console.log('validation failed');
 						return;
 					}
+					//var index = mydata.data.indexOf(item);
+					//console.log('Index:'+index);
+					//mydata.data.splice(index,1);
+					// TODO:dg json update call & update if success
+					mydata.data[mydata.selectedId].Bucket = mydata.selectedBucket;
+					mydata.data[mydata.selectedId].RedShift = mydata.selectedRedshift;
+					mydata.data[mydata.selectedId].Live = (mydata.selectedStatus == 'Yes');
+					mydata.data[mydata.selectedId].Files = mydata.selectedFiles;
+					mydata.data[mydata.selectedId].Batch = mydata.selectedBatch;
+					mydata.filterProcess();
+					mydata.alertMessage = 'Updated record for: '+mydata.selectedBucket;
+					mydata.showAlert = true;
 				}
 				
 				mydata.addNew = function(){
@@ -274,7 +291,7 @@
 						<td class="hidden-xs">{{row.Batch}}</td>
 						<td class="hidden-xs">{{row.RedShift}}</td>
 						<td>
-							<a href="#myForm"><button type="button" ng-click="mydata.edit(row.Bucket)" class="btn btn-info btn-xs">Edit</button></a>
+							<a href="#myForm"><button type="button" ng-click="mydata.edit(row.id)" class="btn btn-info btn-xs">Edit</button></a>
 						</td>
 						<!-- <td>
 							<a href="" target="_blank"><button type="button" class="btn btn-warning btn-xs">Log</button></a>
