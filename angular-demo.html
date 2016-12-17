@@ -15,6 +15,7 @@
 			function($scope, $window) {
 				var mydata = this;
 				
+				// form data
 				mydata.selectedBucket = null;
 				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
 				mydata.selectedRedshift = null;
@@ -23,9 +24,50 @@
 				mydata.status = ['No', 'Yes'];
 				mydata.selectedFiles = null;
 				mydata.selectedBatch = null;
+				
+				// form alert
+				mydata.showAlert = false;
+				mydata.alertMessage = null;
+				
+				mydata.closeAlert = function(){
+					mydata.showAlert = false;
+					mydata.alertMessage = null;
+				}
+				
+				mydata.validateForm = function(){
+					console.log('in validation');
+					if(mydata.selectedBucket == null){
+						mydata.alertMessage = 'Please select a bucket';
+						mydata.showAlert = true;
+						return false;
+					}
+					if(mydata.selectedRedshift == null){
+						mydata.alertMessage = 'Please select a RedShift table';
+						mydata.showAlert = true;
+						return false;
+					}
+					if(mydata.selectedStatus == null){
+						mydata.alertMessage = 'Please select a status';
+						mydata.showAlert = true;
+						return false;
+					}
+					if(mydata.selectedFiles == null){
+						mydata.alertMessage = 'Please select a number of file';
+						mydata.showAlert = true;
+						return false;
+					}
+					if(mydata.selectedBatch == null){
+						mydata.alertMessage = 'Please select a batch size';
+						mydata.showAlert = true;
+						return false;
+					}
+					return true;
+				}
 
+				// table data
 				mydata.header = ['Bucket', 'Live', 'Files', 'Batch', 'RedShift', ''];
 
+				// table data
 				mydata.data = [ {
 					bucket : 'dgallagher.surplus',
 					live : true,
@@ -46,10 +88,12 @@
 					redshift : 'harvest.logs'
 				}, ];
 				
+				// display selected table row, based on bucket name
 				mydata.edit = function(bucketName){
 					angular.forEach(mydata.data, function(item){
 						if(item.bucket == bucketName){
-							console.log(bucketName);
+							//console.log(bucketName);
+							mydata.showAlert = false;
 							mydata.selectedBucket = bucketName;
 							mydata.selectedRedshift = item.redshift;
 							if(item.live){
@@ -64,12 +108,22 @@
 					});
 				}
 				
+				// clear bucket
 				mydata.clear = function(bucketName){
+					mydata.showAlert = false;
 					mydata.selectedBucket = null;
 					mydata.selectedRedshift = null;
 					mydata.selectedStatus = null;
 					mydata.selectedFiles = null;
 					mydata.selectedBatch = null;
+				}
+				
+				mydata.update = function(){
+					console.log('in update');
+					if(!this.validateForm()){
+						console.log('validation failed');
+						return;
+					}
 				}
 				
 				
@@ -91,9 +145,9 @@
 			is3D : true,
 		};
 
-		var chart = new google.visualization.PieChart(document
-				.getElementById('piechart_3d'));
-		chart.draw(data, options);
+		//var chart = new google.visualization.PieChart(document
+		//		.getElementById('piechart_3d'));
+		//chart.draw(data, options);
 	}
 </script>
 </head>
@@ -150,14 +204,17 @@
 						<option disabled selected></option>
 					</select>
 				</div>
-				<button type="submit" class="btn btn-info">Update</button>
+				<div class="alert alert-success" ng-show="mydata.showAlert">
+					<button type="button" class="close" data-ng-click="mydata.closeAlert()" >×</button>
+					<strong>{{mydata.alertMessage}}</strong>
+				</div>
+				<button type="submit" ng-click="mydata.update()" class="btn btn-info">Update</button>
 				<button type="submit" ng-click="mydata.clear()" class="btn btn-warning">Clear</button>
 				<button type="submit" class="btn btn-success">Add New</button>
 			</form>
 		</div>
-		<div id="piechart_3d"></div>
-		<div>
-			<br>
+		<!-- <div id="piechart_3d"></div>-->
+		<div style="height: 60px">
 		</div>
 	</div>
 </body>
