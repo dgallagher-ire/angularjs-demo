@@ -29,10 +29,21 @@
 						return;
 					}
 					mydata.filteredData = [];
+					var parts = mydata.filterText.toUpperCase().split(' ');
 					angular.forEach(mydata.data, function(row) {
-						if (row.bucket.toUpperCase().includes(mydata.filterText.toUpperCase())){
-							mydata.filteredData.push(row);
-						} else if (row.redshift.toUpperCase().includes(mydata.filterText.toUpperCase())){
+						var passed = false;
+						for (i = 0; i < parts.length; ++i) {
+							var part = parts[i];
+							if (row.bucket.toUpperCase().includes(part)){
+								passed = true;
+								continue;
+							} else if (row.redshift.toUpperCase().includes(part)){
+								passed = true;
+								continue;
+							}
+							passed = false;
+						}
+						if(passed){
 							mydata.filteredData.push(row);
 						}
 					});
