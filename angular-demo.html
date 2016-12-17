@@ -5,10 +5,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>S3-RedShift Loader</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 	angular.module('s3RedShiftApp', []).controller(
 			's3RedShiftAppController',
@@ -258,7 +262,8 @@
 				
 			});
 </script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 	google.charts.load("current", {
 		packages : [ "corechart" ]
@@ -285,76 +290,102 @@
 		<div>
 			<h3 class="page-header">S3-RedShift Loader</h3>
 		</div>
-		<div class="form-group has-feedback input-group-sm">
-			<input ng-model="mydata.filterText" ng-change="mydata.filterProcess()" type="search" class="form-control" aria-describedby="inputError2Status" placeholder="filter..." aria-label="filter">
-			<span ng-click="mydata.clearFilter()" class="glyphicon glyphicon-remove form-control-feedback" style="pointer-events: initial; color: #31b0d5; cursor: pointer;"></span>
-		</div>
-		<div>
-			<table class="table table-hover table-condensed">
-				<thead>
-					<tr class="info">
-						<th style="cursor: pointer" class="{{head.setting}}" ng-repeat="head in mydata.header" ng-click="mydata.setSorting(head.name)">{{head.name}}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="row in mydata.filteredData | orderBy:mydata.sortKey:mydata.sortInvert">
-						<td>{{row.Bucket}}</td>
-						<td ng-if="row.Live == true"><span class="label label-success">Yes</span></td>
-						<td ng-if="row.Live == false"><span class="label label-danger">No</span></td>
-						<td>{{row.Files}}</td>
-						<td class="hidden-xs">{{row.Batch}}</td>
-						<td class="hidden-xs">{{row.RedShift}}</td>
-						<td>
-							<a href="#myForm"><button type="button" ng-click="mydata.edit(row.id)" class="btn btn-info btn-xs">Edit</button></a>
-						</td>
-						<!-- <td>
-							<a href="" target="_blank"><button type="button" class="btn btn-warning btn-xs">Log</button></a>
-						</td> -->
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div>
-			<form id="myForm">
-				<div class="alert alert-warning" ng-show="mydata.showAlert">
-					<button type="button" class="close glyphicon glyphicon-remove" data-ng-click="mydata.closeAlert()" ></button>
-					<strong>{{mydata.alertMessage}}</strong>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group has-feedback input-group-sm">
+					<input ng-model="mydata.filterText"
+						ng-change="mydata.filterProcess()" type="search"
+						class="form-control" aria-describedby="inputError2Status"
+						placeholder="filter..." aria-label="filter"> <span
+						ng-click="mydata.clearFilter()"
+						class="glyphicon glyphicon-remove form-control-feedback"
+						style="pointer-events: initial; color: #31b0d5; cursor: pointer;"></span>
 				</div>
-				<div class="form-group">
-					<label for="exampleInputBucket">Bucket</label>
-					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedBucket" ng-options="opt as opt for opt in mydata.buckets">
-						<option disabled selected></option>
-					</select>
+				<div>
+					<table class="table table-hover table-condensed">
+						<thead>
+							<tr class="info">
+								<th style="cursor: pointer" class="{{head.setting}}"
+									ng-repeat="head in mydata.header"
+									ng-click="mydata.setSorting(head.name)">{{head.name}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								ng-repeat="row in mydata.filteredData | orderBy:mydata.sortKey:mydata.sortInvert">
+								<td>{{row.Bucket}}</td>
+								<td ng-if="row.Live == true"><span
+									class="label label-success">Yes</span></td>
+								<td ng-if="row.Live == false"><span
+									class="label label-danger">No</span></td>
+								<td>{{row.Files}}</td>
+								<td class="hidden-xs">{{row.Batch}}</td>
+								<td class="hidden-xs">{{row.RedShift}}</td>
+								<td><a href="#myForm"><button type="button"
+											ng-click="mydata.edit(row.id)" class="btn btn-info btn-xs">Edit</button></a>
+								</td>
+								<!-- <td><a href="" target="_blank"><button type="button" class="btn btn-warning btn-xs">Log</button></a></td> -->
+							</tr>
+						</tbody>
+					</table>
 				</div>
-				<div class="form-group">
-					<label for="exampleInputBucket">Live</label>
-					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedStatus" ng-options="opt as opt for opt in mydata.status">
-						<option disabled selected></option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="exampleInputPassword1">Files</label>
-					<input type="number" ng-model="mydata.selectedFiles" class="form-control" id="exampleInputPassword1" placeholder="Number 1 - 1,000,000">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputPassword1">Batch</label>
-					<input type="number" ng-model="mydata.selectedBatch" class="form-control" id="exampleInputPassword1" placeholder="Number 1 - 1,000">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputBucket">RedShift</label> 
-					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedRedshift" ng-options="opt as opt for opt in mydata.redshift">
-						<option disabled selected></option>
-					</select>
-				</div>
-				<button type="submit" ng-click="mydata.update()" class="btn btn-info">Update</button>
-				<button type="submit" ng-click="mydata.clear()" class="btn btn-warning">Clear</button>
-				<button type="submit" ng-click="mydata.addNew()" class="btn btn-success">Add New</button>
-				<button type="submit" ng-click="mydata.delete()" class="btn btn-danger">Delete</button>
-			</form>
+			</div>
+			<div class="col-md-6">
+				<form id="myForm">
+					<div class="alert alert-warning" ng-show="mydata.showAlert">
+						<button type="button" class="close glyphicon glyphicon-remove"
+							data-ng-click="mydata.closeAlert()"></button>
+						<strong>{{mydata.alertMessage}}</strong>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputBucket">Bucket</label> <select
+							class="form-control" id="exampleInputBucket"
+							ng-model="mydata.selectedBucket"
+							ng-options="opt as opt for opt in mydata.buckets">
+							<option disabled selected></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputBucket">Live</label> <select
+							class="form-control" id="exampleInputBucket"
+							ng-model="mydata.selectedStatus"
+							ng-options="opt as opt for opt in mydata.status">
+							<option disabled selected></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Files</label> <input
+							type="number" ng-model="mydata.selectedFiles"
+							class="form-control" id="exampleInputPassword1"
+							placeholder="Number 1 - 1,000,000">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Batch</label> <input
+							type="number" ng-model="mydata.selectedBatch"
+							class="form-control" id="exampleInputPassword1"
+							placeholder="Number 1 - 1,000">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputBucket">RedShift</label> <select
+							class="form-control" id="exampleInputBucket"
+							ng-model="mydata.selectedRedshift"
+							ng-options="opt as opt for opt in mydata.redshift">
+							<option disabled selected></option>
+						</select>
+					</div>
+					<button type="submit" ng-click="mydata.update()"
+						class="btn btn-info">Update</button>
+					<button type="submit" ng-click="mydata.clear()"
+						class="btn btn-warning">Clear</button>
+					<button type="submit" ng-click="mydata.addNew()"
+						class="btn btn-success">Add New</button>
+					<button type="submit" ng-click="mydata.delete()"
+						class="btn btn-danger">Delete</button>
+				</form>
+			</div>
 		</div>
 		<!-- <div id="piechart_3d"></div>-->
-		<div style="height: 30px;">
-		</div>
+		<div style="height: 30px;"></div>
 		<div style="width: 100%; text-align: center; vertical-align: bottom;">
 			<a href="#top">
 				<button type="button" class="btn btn-info btn-sm">
