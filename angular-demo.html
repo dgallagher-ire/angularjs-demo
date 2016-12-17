@@ -85,27 +85,27 @@
 				mydata.validateForm = function(){
 					console.log('in validation');
 					if(mydata.selectedBucket == null){
-						mydata.alertMessage = 'Please select a bucket';
+						mydata.alertMessage = 'ERROR: Please select a bucket';
 						mydata.showAlert = true;
 						return false;
 					}
 					if(mydata.selectedStatus == null){
-						mydata.alertMessage = 'Please select if live';
+						mydata.alertMessage = 'ERROR: Please select if live';
 						mydata.showAlert = true;
 						return false;
 					}
 					if(mydata.selectedFiles == null){
-						mydata.alertMessage = 'Please select a number of file';
+						mydata.alertMessage = 'ERROR: Please select a number of file';
 						mydata.showAlert = true;
 						return false;
 					}
 					if(mydata.selectedBatch == null){
-						mydata.alertMessage = 'Please select a batch size';
+						mydata.alertMessage = 'ERROR: Please select a batch size';
 						mydata.showAlert = true;
 						return false;
 					}
 					if(mydata.selectedRedshift == null){
-						mydata.alertMessage = 'Please select a RedShift table';
+						mydata.alertMessage = 'ERROR: Please select a RedShift table';
 						mydata.showAlert = true;
 						return false;
 					}
@@ -117,7 +117,7 @@
 					var result = true;
 					angular.forEach(mydata.data, function(item){
 						if(item.Bucket == mydata.selectedBucket){
-							mydata.alertMessage = 'Loader already exists for bucket: '+mydata.selectedBucket;
+							mydata.alertMessage = 'ERROR: Loader already exists for bucket: '+mydata.selectedBucket;
 							mydata.showAlert = true;
 							result = false;
 						}
@@ -127,7 +127,7 @@
 					}
 					angular.forEach(mydata.data, function(item){
 						if(item.RedShift == mydata.selectedRedshift){
-							mydata.alertMessage = 'Loader already exists for RedShift: '+mydata.selectedRedshift;
+							mydata.alertMessage = 'ERROR: Loader already exists for RedShift: '+mydata.selectedRedshift;
 							mydata.showAlert = true;
 							result = false;
 						}
@@ -216,13 +216,18 @@
 					//console.log('Index:'+index);
 					//mydata.data.splice(index,1);
 					// TODO:dg json update call & update if success
+					if(mydata.data[mydata.selectedId].Bucket != mydata.selectedBucket){
+						mydata.alertMessage = 'ERROR: Cannot change bucket: '+mydata.selectedBucket;
+						mydata.showAlert = true;
+						return;
+					}
 					mydata.data[mydata.selectedId].Bucket = mydata.selectedBucket;
 					mydata.data[mydata.selectedId].RedShift = mydata.selectedRedshift;
 					mydata.data[mydata.selectedId].Live = (mydata.selectedStatus == 'Yes');
 					mydata.data[mydata.selectedId].Files = mydata.selectedFiles;
 					mydata.data[mydata.selectedId].Batch = mydata.selectedBatch;
 					mydata.filterProcess();
-					mydata.alertMessage = 'Updated record for: '+mydata.selectedBucket;
+					mydata.alertMessage = 'SUCCESS: Updated record for: '+mydata.selectedBucket;
 					mydata.showAlert = true;
 				}
 				
@@ -247,7 +252,7 @@
 					newRec.Batch = mydata.selectedBatch;
 					mydata.data.push(newRec);
 					mydata.filterProcess();
-					mydata.alertMessage = 'Added new record for: '+mydata.selectedBucket;
+					mydata.alertMessage = 'SUCCESS: Added new record for: '+mydata.selectedBucket;
 					mydata.showAlert = true;
 				}
 				
@@ -257,6 +262,12 @@
 						console.log('validation failed');
 						return;
 					}
+					this.showJson();
+				}
+				
+				mydata.showJson = function(){
+					var json = JSON.stringify(mydata.data[mydata.selectedId]);
+					console.log(json);
 				}
 				
 				
@@ -311,8 +322,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr
-								ng-repeat="row in mydata.filteredData | orderBy:mydata.sortKey:mydata.sortInvert">
+							<tr ng-repeat="row in mydata.filteredData | orderBy:mydata.sortKey:mydata.sortInvert">
 								<td>{{row.Bucket}}</td>
 								<td ng-if="row.Live == true"><span
 									class="label label-success">Yes</span></td>
@@ -338,7 +348,8 @@
 						<strong>{{mydata.alertMessage}}</strong>
 					</div>
 					<div class="form-group">
-						<label for="exampleInputBucket">Bucket</label> <select
+						<label for="exampleInputBucket">Bucket</label>
+						<select
 							class="form-control" id="exampleInputBucket"
 							ng-model="mydata.selectedBucket"
 							ng-options="opt as opt for opt in mydata.buckets">
