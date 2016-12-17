@@ -165,6 +165,14 @@
 					}
 				}
 				
+				mydata.delete = function(){
+					console.log('in update');
+					if(!this.validateForm()){
+						console.log('validation failed');
+						return;
+					}
+				}
+				
 				
 			});
 </script>
@@ -217,7 +225,7 @@
 		</div>
 		<div>
 			<form id="myForm">
-				<div class="alert alert-success" ng-show="mydata.showAlert">
+				<div class="alert alert-warning" ng-show="mydata.showAlert">
 					<button type="button" class="close" data-ng-click="mydata.closeAlert()" >×</button>
 					<strong>{{mydata.alertMessage}}</strong>
 				</div>
@@ -250,6 +258,7 @@
 				<button type="submit" ng-click="mydata.update()" class="btn btn-info">Update</button>
 				<button type="submit" ng-click="mydata.clear()" class="btn btn-warning">Clear</button>
 				<button type="submit" ng-click="mydata.addNew()" class="btn btn-success">Add New</button>
+				<button type="submit" ng-click="mydata.delete()" class="btn btn-danger">Delete</button>
 			</form>
 		</div>
 		<!-- <div id="piechart_3d"></div>-->
