@@ -17,9 +17,12 @@
 				
 				mydata.selectedBucket = null;
 				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
-				
-				mydata.selectRedshift = null;
+				mydata.selectedRedshift = null;
 				mydata.redshift = ['harvest.surplus','ds.backup','harvest.logs'];
+				mydata.selectedStatus = null;
+				mydata.status = ['No', 'Yes'];
+				mydata.selectedFiles = null;
+				mydata.selectedBatch = null;
 
 				mydata.header = ['Bucket', 'Live', 'Files', 'Batch', 'RedShift', ''];
 
@@ -47,12 +50,18 @@
 					angular.forEach(mydata.data, function(item){
 						if(item.bucket == bucketName){
 							$window.alert(bucketName);
-						} else {
-							$window.alert('no match');
+							mydata.selectedBucket = bucketName;
+							mydata.selectedRedshift = item.redshift;
+							if(item.live){
+								mydata.selectedStatus = 'Yes';
+							} else{
+								mydata.selectedStatus = 'No';
+							}
+							mydata.selectedFiles = item.files;
+							mydata.selectedBatch = item.batch;
 						}
 						
 					});
-					mydata.selectedBucket = bucketName;
 				}
 				
 				
@@ -95,10 +104,8 @@
 				<tbody>
 					<tr ng-repeat="row in mydata.data">
 						<td>{{row.bucket}}</td>
-						<td ng-if="row.live == true"><span
-							class="label label-success">Yes</span></td>
-						<td ng-if="row.live == false"><span
-							class="label label-danger">No</span></td>
+						<td ng-if="row.live == true"><span class="label label-success">Yes</span></td>
+						<td ng-if="row.live == false"><span class="label label-danger">No</span></td>
 						<td>{{row.files}}</td>
 						<td>{{row.batch}}</td>
 						<td>{{row.redshift}}</td>
@@ -116,26 +123,22 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="exampleInputBucket">Live</label> <select
-						class="form-control" id="exampleInputBucket">
+					<label for="exampleInputBucket">Live</label>
+					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedStatus" ng-options="opt as opt for opt in mydata.status">
 						<option disabled selected></option>
-						<option>No</option>
-						<option>Yes</option>
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="exampleInputPassword1">Files</label> <input type="text"
-						class="form-control" id="exampleInputPassword1"
-						placeholder="Number 1 - 1,000,000">
+					<label for="exampleInputPassword1">Files</label>
+					<input type="text" ng-model="mydata.selectedFiles" class="form-control" id="exampleInputPassword1" placeholder="Number 1 - 1,000,000">
 				</div>
 				<div class="form-group">
-					<label for="exampleInputPassword1">Batch</label> <input type="text"
-						class="form-control" id="exampleInputPassword1"
-						placeholder="Number 1 - 1,000">
+					<label for="exampleInputPassword1">Batch</label>
+					<input type="text" ng-model="mydata.selectedBatch" class="form-control" id="exampleInputPassword1" placeholder="Number 1 - 1,000">
 				</div>
 				<div class="form-group">
 					<label for="exampleInputBucket">RedShift</label> 
-					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectRedshift" ng-options="opt as opt for opt in mydata.redshift">
+					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedRedshift" ng-options="opt as opt for opt in mydata.redshift">
 						<option disabled selected></option>
 					</select>
 				</div>
