@@ -64,7 +64,7 @@
 				// form data
 				mydata.selectedId = null;
 				mydata.selectedBucket = null;
-				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
+				mydata.buckets = ['dgallagher-bucket','dgallagher.file-dump','dgallagher.lambda-store','dgallagher.reporting','dgallagher.reporting-service'];
 				mydata.selectedRedshift = null;
 				mydata.redshift = ['harvest.surplus','ds.backup','harvest.logs', 'pu.table'];
 				mydata.selectedStatus = null;
@@ -151,21 +151,21 @@
 				// table data
 				mydata.data = [ {
 					id : 0,
-					Bucket : 'dgallagher.surplus',
+					Bucket : 'dgallagher-bucket',
 					Live : true,
 					Files : 10000,
 					Batch : 1000,
 					RedShift : 'harvest.surplus'
 				}, {
 					id : 1,
-					Bucket : 'dgallagher.files',
+					Bucket : 'dgallagher.file-dump',
 					Live : true,
 					Files : 10000,
 					Batch : 1000,
 					RedShift : 'ds.backup'
 				}, {
 					id : 2,
-					Bucket : 'dgallagher.store',
+					Bucket : 'dgallagher.lambda-store',
 					Live : false,
 					Files : 250000,
 					Batch : 20000,
@@ -273,8 +273,7 @@
 				
 			});
 </script>
-<script type="text/javascript"
-	src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 	google.charts.load("current", {
 		packages : [ "corechart" ]
