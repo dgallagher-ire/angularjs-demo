@@ -62,7 +62,7 @@
 				mydata.selectedBucket = null;
 				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
 				mydata.selectedRedshift = null;
-				mydata.redshift = ['harvest.surplus','ds.backup','harvest.logs'];
+				mydata.redshift = ['harvest.surplus','ds.backup','harvest.logs', 'pu.table'];
 				mydata.selectedStatus = null;
 				mydata.status = ['No', 'Yes'];
 				mydata.selectedFiles = null;
@@ -201,6 +201,7 @@
 					mydata.selectedBatch = null;
 				}
 				
+				// update record
 				mydata.update = function(){
 					console.log('in update');
 					if(!this.validateForm()){
@@ -221,6 +222,7 @@
 					mydata.showAlert = true;
 				}
 				
+				// add new record
 				mydata.addNew = function(){
 					console.log('in update');
 					if(!this.validateForm()){
@@ -231,6 +233,18 @@
 						console.log('validation failed dup');
 						return;
 					}
+					// TODO:dg JSON add call
+					var newRec = angular.copy(mydata.data[0]);
+					newRec.id = mydata.data.length;
+					newRec.Bucket = mydata.selectedBucket;
+					newRec.RedShift = mydata.selectedRedshift;
+					newRec.Live = (mydata.selectedStatus == 'Yes');
+					newRec.Files = mydata.selectedFiles;
+					newRec.Batch = mydata.selectedBatch;
+					mydata.data.push(newRec);
+					mydata.filterProcess();
+					mydata.alertMessage = 'Added new record for: '+mydata.selectedBucket;
+					mydata.showAlert = true;
 				}
 				
 				mydata.delete = function(){
