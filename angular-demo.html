@@ -34,6 +34,7 @@
 					mydata.alertMessage = null;
 				}
 				
+				// form validation
 				mydata.validateForm = function(){
 					console.log('in validation');
 					if(mydata.selectedBucket == null){
@@ -41,13 +42,8 @@
 						mydata.showAlert = true;
 						return false;
 					}
-					if(mydata.selectedRedshift == null){
-						mydata.alertMessage = 'Please select a RedShift table';
-						mydata.showAlert = true;
-						return false;
-					}
 					if(mydata.selectedStatus == null){
-						mydata.alertMessage = 'Please select a status';
+						mydata.alertMessage = 'Please select if live';
 						mydata.showAlert = true;
 						return false;
 					}
@@ -59,6 +55,37 @@
 					if(mydata.selectedBatch == null){
 						mydata.alertMessage = 'Please select a batch size';
 						mydata.showAlert = true;
+						return false;
+					}
+					if(mydata.selectedRedshift == null){
+						mydata.alertMessage = 'Please select a RedShift table';
+						mydata.showAlert = true;
+						return false;
+					}
+					return true;
+				}
+				
+				// new record validation
+				mydata.validateNew = function(){
+					var result = true;
+					angular.forEach(mydata.data, function(item){
+						if(item.bucket == mydata.selectedBucket){
+							mydata.alertMessage = 'Loader already exists for bucket: '+mydata.selectedBucket;
+							mydata.showAlert = true;
+							result = false;
+						}
+					});
+					if(!result){
+						return false;
+					}
+					angular.forEach(mydata.data, function(item){
+						if(item.redshift == mydata.selectedRedshift){
+							mydata.alertMessage = 'Loader already exists for RedShift: '+mydata.selectedRedshift;
+							mydata.showAlert = true;
+							result = false;
+						}
+					});
+					if(!result){
 						return false;
 					}
 					return true;
@@ -126,6 +153,18 @@
 					}
 				}
 				
+				mydata.addNew = function(){
+					console.log('in update');
+					if(!this.validateForm()){
+						console.log('validation failed');
+						return;
+					}
+					if(!this.validateNew()){
+						console.log('validation failed dup');
+						return;
+					}
+				}
+				
 				
 			});
 </script>
@@ -178,6 +217,10 @@
 		</div>
 		<div>
 			<form id="myForm">
+				<div class="alert alert-success" ng-show="mydata.showAlert">
+					<button type="button" class="close" data-ng-click="mydata.closeAlert()" >×</button>
+					<strong>{{mydata.alertMessage}}</strong>
+				</div>
 				<div class="form-group">
 					<label for="exampleInputBucket">Bucket</label>
 					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectedBucket" ng-options="opt as opt for opt in mydata.buckets">
@@ -204,13 +247,9 @@
 						<option disabled selected></option>
 					</select>
 				</div>
-				<div class="alert alert-success" ng-show="mydata.showAlert">
-					<button type="button" class="close" data-ng-click="mydata.closeAlert()" >×</button>
-					<strong>{{mydata.alertMessage}}</strong>
-				</div>
 				<button type="submit" ng-click="mydata.update()" class="btn btn-info">Update</button>
 				<button type="submit" ng-click="mydata.clear()" class="btn btn-warning">Clear</button>
-				<button type="submit" class="btn btn-success">Add New</button>
+				<button type="submit" ng-click="mydata.addNew()" class="btn btn-success">Add New</button>
 			</form>
 		</div>
 		<!-- <div id="piechart_3d"></div>-->
