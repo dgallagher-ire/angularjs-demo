@@ -24,16 +24,18 @@
 				
 				mydata.filterProcess = function() {
 					console.log('Filter:'+mydata.filterText);
-						if(mydata.filterText == null || mydata.filterText == ''){
-							mydata.filteredData = mydata.data;
-							return;
+					if(mydata.filterText == null || mydata.filterText == ''){
+						mydata.filteredData = mydata.data;
+						return;
+					}
+					mydata.filteredData = [];
+					angular.forEach(mydata.data, function(row) {
+						if (row.bucket.toUpperCase().includes(mydata.filterText.toUpperCase())){
+							mydata.filteredData.push(row);
+						} else if (row.redshift.toUpperCase().includes(mydata.filterText.toUpperCase())){
+							mydata.filteredData.push(row);
 						}
-						mydata.filteredData = [];
-						angular.forEach(mydata.data, function(row) {
-							if (row.bucket.toUpperCase().includes(mydata.filterText.toUpperCase())){
-								mydata.filteredData.push(row);
-							}
-						});
+					});
 				};
 				
 				// form data
