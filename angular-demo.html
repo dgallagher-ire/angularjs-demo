@@ -17,6 +17,9 @@
 				
 				mydata.selectedBucket = null;
 				mydata.buckets = ['dgallagher.surplus','dgallagher.files','dgallagher.lambda','dgallagher.store','dgallagher.glacier'];
+				
+				mydata.selectRedshift = null;
+				mydata.redshift = ['harvest.surplus','ds.backup','harvest.logs'];
 
 				mydata.header = ['Bucket', 'Live', 'Files', 'Batch', 'RedShift', ''];
 
@@ -27,13 +30,13 @@
 					batch : 1000,
 					redshift : 'harvest.surplus'
 				}, {
-					bucket : 'Backup',
+					bucket : 'dgallagher.files',
 					live : true,
 					files : 10000,
 					batch : 1000,
 					redshift : 'ds.backup'
 				}, {
-					bucket : 'Logs',
+					bucket : 'dgallagher.store',
 					live : false,
 					files : 250000,
 					batch : 20000,
@@ -41,7 +44,14 @@
 				}, ];
 				
 				mydata.edit = function(bucketName){
-					$window.alert(bucketName);
+					angular.forEach(mydata.data, function(item){
+						if(item.bucket == bucketName){
+							$window.alert(bucketName);
+						} else {
+							$window.alert('no match');
+						}
+						
+					});
 					mydata.selectedBucket = bucketName;
 				}
 				
@@ -125,12 +135,8 @@
 				</div>
 				<div class="form-group">
 					<label for="exampleInputBucket">RedShift</label> 
-					<select class="form-control" id="exampleInputBucket">
+					<select class="form-control" id="exampleInputBucket" ng-model="mydata.selectRedshift" ng-options="opt as opt for opt in mydata.redshift">
 						<option disabled selected></option>
-						<option>harvest.surplus</option>
-						<option>ds.files</option>
-						<option>lambda</option>
-						<option>files.store</option>
 					</select>
 				</div>
 				<button type="submit" class="btn btn-primary">Submit</button>
