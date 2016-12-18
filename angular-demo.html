@@ -77,36 +77,34 @@
 				mydata.alertMessage = null;
 				// close alert
 				mydata.closeAlert = function(){
-					mydata.showAlert = false;
-					mydata.alertMessage = null;
+					mydata.setAlert(false, null);
+				}
+				mydata.setAlert = function(alert, msg){
+					mydata.showAlert = alert;
+					mydata.alertMessage = msg;
 				}
 				
 				// form validation
 				mydata.validateForm = function(){
 					console.log('in validation');
 					if(mydata.selectedBucket == null){
-						mydata.alertMessage = 'ERROR: Please select a bucket';
-						mydata.showAlert = true;
+						mydata.setAlert(true, 'ERROR: Please select a bucket');
 						return false;
 					}
 					if(mydata.selectedStatus == null){
-						mydata.alertMessage = 'ERROR: Please select if live';
-						mydata.showAlert = true;
+						mydata.setAlert(true, 'ERROR: Please select if live');
 						return false;
 					}
 					if(mydata.selectedFiles == null){
-						mydata.alertMessage = 'ERROR: Please select a number of file';
-						mydata.showAlert = true;
+						mydata.setAlert(true, 'ERROR: Please select a number of file');
 						return false;
 					}
 					if(mydata.selectedBatch == null){
-						mydata.alertMessage = 'ERROR: Please select a batch size';
-						mydata.showAlert = true;
+						mydata.setAlert(true, 'ERROR: Please select a batch size');
 						return false;
 					}
 					if(mydata.selectedRedshift == null){
-						mydata.alertMessage = 'ERROR: Please select a RedShift table';
-						mydata.showAlert = true;
+						mydata.setAlert(true, 'ERROR: Please select a RedShift table');
 						return false;
 					}
 					return true;
@@ -117,8 +115,7 @@
 					var result = true;
 					angular.forEach(mydata.data, function(item){
 						if(item.Bucket == mydata.selectedBucket){
-							mydata.alertMessage = 'ERROR: Loader already exists for bucket: '+mydata.selectedBucket;
-							mydata.showAlert = true;
+							mydata.setAlert(true, 'ERROR: Loader already exists for bucket: '+mydata.selectedBucket);
 							result = false;
 						}
 					});
@@ -127,8 +124,7 @@
 					}
 					angular.forEach(mydata.data, function(item){
 						if(item.RedShift == mydata.selectedRedshift){
-							mydata.alertMessage = 'ERROR: Loader already exists for RedShift: '+mydata.selectedRedshift;
-							mydata.showAlert = true;
+							mydata.setAlert(true, 'ERROR: Loader already exists for RedShift: '+mydata.selectedRedshift);
 							result = false;
 						}
 					});
@@ -178,7 +174,7 @@
 				mydata.edit = function(id){
 					angular.forEach(mydata.data, function(item){ // use foreach demo could use index
 						if(item.id == id){
-							mydata.showAlert = false;
+							mydata.closeAlert();
 							mydata.selectedId = item.id;
 							mydata.selectedBucket = item.Bucket;
 							mydata.selectedRedshift = item.RedShift;
@@ -196,7 +192,7 @@
 				
 				// clear bucket
 				mydata.clear = function(bucketName){
-					mydata.showAlert = false;
+					mydata.closeAlert();
 					mydata.selectedId = null;
 					mydata.selectedBucket = null;
 					mydata.selectedRedshift = null;
@@ -217,8 +213,7 @@
 					//mydata.data.splice(index,1);
 					// TODO:dg json update call & update if success
 					if(mydata.data[mydata.selectedId].Bucket != mydata.selectedBucket){
-						mydata.alertMessage = 'ERROR: Cannot change bucket: '+mydata.selectedBucket;
-						mydata.showAlert = true;
+						mydata.setAlert(true, 'ERROR: Cannot change bucket: '+mydata.selectedBucket);
 						return;
 					}
 					mydata.data[mydata.selectedId].Bucket = mydata.selectedBucket;
@@ -227,8 +222,7 @@
 					mydata.data[mydata.selectedId].Files = mydata.selectedFiles;
 					mydata.data[mydata.selectedId].Batch = mydata.selectedBatch;
 					mydata.filterProcess();
-					mydata.alertMessage = 'SUCCESS: Updated record for: '+mydata.selectedBucket;
-					mydata.showAlert = true;
+					mydata.setAlert(true, 'SUCCESS: Updated record for: '+mydata.selectedBucket);
 				}
 				
 				// add new record
@@ -252,8 +246,7 @@
 					newRec.Batch = mydata.selectedBatch;
 					mydata.data.push(newRec);
 					mydata.filterProcess();
-					mydata.alertMessage = 'SUCCESS: Added new record for: '+mydata.selectedBucket;
-					mydata.showAlert = true;
+					mydata.setAlert(true, 'SUCCESS: Added new record for: '+mydata.selectedBucket);
 				}
 				
 				mydata.delete = function(){
