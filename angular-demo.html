@@ -84,6 +84,19 @@
 					mydata.alertMessage = msg;
 				}
 				
+				// confirm delete
+				mydata.showConfDel = false;
+				mydata.confDelMessage = null;
+				// close alert
+				mydata.closeConfDel = function(){
+					mydata.setConfDel(false, null);
+				}
+				mydata.setConfDel = function(alert, msg){
+					mydata.showConfDel = alert;
+					mydata.confDelMessage = msg;
+				}
+				
+				
 				// form validation
 				mydata.validateForm = function(){
 					console.log('in validation');
@@ -256,6 +269,11 @@
 						return;
 					}
 					this.showJson();
+					mydata.setConfDel(true,'Confirm you want to delete '+mydata.selectedBucket+'?');
+				}
+				
+				mydata.doDelete = function(){
+					
 				}
 				
 				mydata.showJson = function(){
@@ -375,6 +393,12 @@
 							ng-options="opt as opt for opt in mydata.redshift">
 							<option disabled selected></option>
 						</select>
+					</div>
+					<div class="alert alert-danger" ng-show="mydata.showConfDel">
+						<button type="button" class="close glyphicon glyphicon-remove"
+							data-ng-click="mydata.closeConfDel()"></button>
+						<!-- <strong>{{mydata.confDelMessage}}</strong>-->
+						<button type="submit" ng-click="mydata.doDelete()" class="btn btn-danger btn-sm">{{mydata.confDelMessage}}</button>
 					</div>
 					<button type="submit" ng-click="mydata.update()"
 						class="btn btn-info">Update</button>
