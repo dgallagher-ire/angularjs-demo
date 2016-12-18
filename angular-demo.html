@@ -78,6 +78,7 @@
 				// close alert
 				mydata.closeAlert = function(){
 					mydata.setAlert(false, null);
+					mydata.closeConfDel();
 				}
 				mydata.setAlert = function(alert, msg){
 					mydata.showAlert = alert;
