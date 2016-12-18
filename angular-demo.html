@@ -275,13 +275,18 @@
 				mydata.doDelete = function(){
 					var payload = mydata.buildPayload('DELETE', mydata.data[this.selectedId]);
 					console.log(JSON.stringify(payload));
-					var res = $http.post(
+					$http.post(
 							'https://8p61mpr4yl.execute-api.eu-west-1.amazonaws.com/prod/PostDemo',
-							payload);
-					console.log('Status:'+res.status);
-					console.log('StatusText:'+res.statusText);
-					console.log('Data:'+res.data);
-					console.log(res);
+							payload)
+							.then(
+								function (response) {
+									var resData = response.data;
+									console.log('ResData:'+resData.response);
+								},
+								function (data, status, header, config) {
+								
+								}
+							);
 				}
 				
 				mydata.buildPayload = function(doAction, record){
