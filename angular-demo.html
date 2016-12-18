@@ -71,6 +71,15 @@
 				mydata.status = ['No', 'Yes'];
 				mydata.selectedFiles = null;
 				mydata.selectedBatch = null;
+				// clear form
+				mydata.clearForm = function(){
+					mydata.selectedId = null;
+					mydata.selectedBucket = null;
+					mydata.selectedRedshift = null;
+					mydata.selectedStatus = null;
+					mydata.selectedFiles = null;
+					mydata.selectedBatch = null;
+				}
 				
 				// form alert
 				mydata.showAlert = false;
