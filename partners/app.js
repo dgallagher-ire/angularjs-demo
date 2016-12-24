@@ -23,3 +23,15 @@ app.config(function($routeProvider) {
 app.config(['$locationProvider', function($locationProvider) {
   $locationProvider.hashPrefix('');// 1.6.0 migration https://docs.angularjs.org/guide/migration#commit-aa077e8
 }]);
+
+app.service('sharedProperties', function () {
+    var hashtable = {};
+    return {
+        setValue: function (key, value) {
+            hashtable[key] = value;
+        },
+        getValue: function (key) {
+            return hashtable[key];
+        }
+    }
+});
