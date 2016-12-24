@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Partner Admin</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular-route.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="app.js"></script>
+<title>Partner Admin</title>
+
+</head>
+
+<body ng-app="myApp">
+
+<p><a href="#/">Main</a></p>
+
+<a href="#!banana">Banana</a>
+<a href="#!tomato">Tomato</a>
+
+<p>Click on the links to change the content.</p>
+
+<p>The HTML shown in the ng-view directive are written in the template property of the $routeProvider.when method.</p>
+
+<div ng-view></div>
+
+<script>
+var app = angular.module("myApp", ["ngRoute"]);
+app.config(function($routeProvider) {
+    $routeProvider
+    .when("/", {
+        template : "<h1>Main</h1><p>Click on the links to change this content</p>"
+    })
+    .when("/banana", {
+        template : "<h1>Banana</h1><p>Bananas contain around 75% water.</p>"
+    })
+    .when("/tomato", {
+        template : "<h1>Tomato</h1><p>Tomatoes contain around 95% water.</p>"
+    });
+});
+</script>
+
+</body>
+
+	<!-- <div class="container">
+		<div>
+			<h3 class="page-header">Partner Admin</h3>
+		</div>
+		<ul class="nav nav-tabs">
+			<li class="active"><a data-toggle="tab" href="#portaluser">Portal Users</a></li>
+			<li><a data-toggle="tab" href="#clients">Clients</a></li>
+			<li><a data-toggle="tab" href="#reports">Reports</a></li>
+		</ul>
+		<div ng-view></div>
+	</div>-->
+</html>
