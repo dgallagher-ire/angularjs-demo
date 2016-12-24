@@ -2,9 +2,9 @@
  * 
  */
 
-angular.module('my-app', ['ngRoute'])
+var app = angular.module('my-app', ['ngRoute'])
 
-.config(function($routeProvider) {
+app.config(function($routeProvider) {
     $routeProvider
     .when("/portaluser", {
         //templateUrl : "portaluser.html"
@@ -19,3 +19,7 @@ angular.module('my-app', ['ngRoute'])
     	template : "<div><h3>Reports</h3><p>Some content.</p></div>"
     });
 });
+
+app.config(['$locationProvider', function($locationProvider) {
+  $locationProvider.hashPrefix('');// 1.6.0 migration https://docs.angularjs.org/guide/migration#commit-aa077e8
+}]);
