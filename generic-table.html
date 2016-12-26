@@ -36,7 +36,6 @@
 				}
 				// filter processor
 				mydata.filterProcess = function() {
-					console.log('Filter:'+mydata.filterText);
 					if(mydata.filterText == null || mydata.filterText == ''){
 						mydata.filteredData = mydata.data;
 						return;
@@ -47,21 +46,17 @@
 						var passed = false;
 						for (i = 0; i < parts.length; ++i) {
 							var part = parts[i];
-							console.log('Part:'+part);
 							for(var keyName in row){
 								var val = row[keyName];
 								console.log(keyName+':'+val);
 								if(!angular.isString(val) || angular.equals(keyName,'$$hashKey')){
-									console.log('Pass:'+passed);
 									continue;
 								}
 								if(val.toUpperCase().includes(part)){
 									passed = true;
-									console.log('Pass:'+passed);
 									break;
 								}
 								passed = false;
-								console.log('Pass:'+passed);
 							}
 						}
 						if(passed){
@@ -71,21 +66,16 @@
 				};
 				
 				mydata.loadExt = function() {
-					console.log(JSON.stringify(mydata.data));
 					var link = 'http://localhost:8084/api-backend/api?call=datademo';
 					$http.post(
 							link,
 							'any old crap for the moment')
 							.then(
 								function (response) {
-									var resData = response.data;
-									console.log('Res:'+response);
-									console.log('ResData:'+console.log(JSON.stringify(resData)));
-									console.log('Status:'+response.statusText); 
+									var resData = response.data; 
 									mydata.data = resData;
 									mydata.header = [];
 									for(var keyName in mydata.data[0]){
-										console.log(keyName);
 										mydata.header.push(keyName);
 									}
 									mydata.filterProcess();
