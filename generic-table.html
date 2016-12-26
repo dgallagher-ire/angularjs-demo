@@ -18,7 +18,8 @@
 				// data
 				mydata.header = [];
 				mydata.data = [];				
-				mydata.filteredData = mydata.data;	
+				mydata.filteredData = mydata.data;
+				mydata.totalRow = [];
 				
 				// sorting
 				mydata.sortKey = null;
@@ -38,6 +39,7 @@
 				mydata.filterProcess = function() {
 					if(mydata.filterText == null || mydata.filterText == ''){
 						mydata.filteredData = mydata.data;
+						mydata.calcTotals();
 						return;
 					}
 					mydata.filteredData = [];
@@ -61,6 +63,32 @@
 						}
 						if(passed){
 							mydata.filteredData.push(row);
+						}
+					});
+					mydata.calcTotals();
+				};
+				
+				mydata.calcTotals = function() {
+					mydata.totalRow = [];
+					var num = 0;
+					for(var keyName in mydata.filteredData[0]){
+						if(angular.equals(keyName,'$$hashKey')){
+							continue;
+						}
+						num++;
+						mydata.totalRow.push(0);
+					}
+					console.log(num);
+					angular.forEach(mydata.filteredData, function(row) {
+						var pos = 0;
+						for(var keyName in row){
+							var val = row[keyName];
+							console.log(keyName+':'+val);
+							if(angular.equals(keyName,'$$hashKey') || angular.equals(keyName.toUpperCase(),'ID')){
+							} else if(angular.isNumber(val)){
+								mydata.totalRow[pos] = mydata.totalRow[pos]+val;
+							}
+							pos = pos+1;
 						}
 					});
 				};
@@ -90,7 +118,7 @@
 			});
 </script>
 </head>
-<body ng-controller="my-ctrl as mydata">
+<body ng-controller="my-ctrl as mydata" style="font-size: 12px">
 	<div class="container" id="top">
 
 		<div>
@@ -127,9 +155,16 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr
-							ng-repeat="row in mydata.filteredData | orderBy:mydata.sortKey:mydata.sortInvert">
+						<tr ng-repeat="row in mydata.filteredData | orderBy:mydata.sortKey:mydata.sortInvert">
 							<td ng-repeat="(key, value) in row">{{value}}</td>
+						</tr>
+						<tr>
+							<td ng-repeat="val in mydata.totalRow track by $index">
+								<strong>
+									<u ng-if="val > 0">{{val}}</u>
+									<u ng-if="val <= 0"></u>
+								</strong>
+							</td>
 						</tr>
 					</tbody>
 				</table>
