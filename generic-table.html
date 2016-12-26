@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html ng-app="my-app">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generic Table</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	angular.module('my-app', []).controller(
+			'my-ctrl',
+			function($scope, $window, $http) {
+				var mydata = this;
+				
+				// data
+				mydata.header = [];
+				mydata.data = [];				
+				mydata.filteredData = mydata.data;	
+				
+				// sorting
+				mydata.sortKey = null;
+				mydata.sortInvert = false;
+				mydata.setSorting = function(key){
+					mydata.sortKey = key;
+					mydata.sortInvert = !mydata.sortInvert;
+				}
+				
+				// filter
+				mydata.filterText = null;
+				mydata.clearFilter = function(){
+					mydata.filterText = null;
+					this.filterProcess();
+				}
+				// filter processor
+				mydata.filterProcess = function() {
+					console.log('Filter:'+mydata.filterText);
+					if(mydata.filterText == null || mydata.filterText == ''){
+						mydata.filteredData = mydata.data;
+						return;
+					}
+					mydata.filteredData = [];
+					var parts = mydata.filterText.toUpperCase().split(' ');
+					angular.forEach(mydata.data, function(row) {
+						var passed = false;
+						for (i = 0; i < parts.length; ++i) {
+							var part = parts[i];
+							console.log('Part:'+part);
+							for(var keyName in row){
+								var val = row[keyName];
+								console.log(keyName+':'+val);
+								if(!angular.isString(val) || angular.equals(keyName,'$$hashKey')){
+									console.log('Pass:'+passed);
+									continue;
+								}
+								if(val.toUpperCase().includes(part)){
+									passed = true;
+									console.log('Pass:'+passed);
+									break;
+								}
+								passed = false;
+								console.log('Pass:'+passed);
+							}
+						}
+						if(passed){
+							mydata.filteredData.push(row);
+						}
+					});
+				};
+				
+				mydata.loadExt = function() {
+					console.log(JSON.stringify(mydata.data));
+					var link = 'http://localhost:8084/api-backend/api?call=datademo';
+					$http.post(
+							link,
+							'any old crap for the moment')
+							.then(
+								function (response) {
+									var resData = response.data;
+									console.log('Res:'+response);
+									console.log('ResData:'+console.log(JSON.stringify(resData)));
+									console.log('Status:'+response.statusText); 
+									mydata.data = resData;
+									mydata.header = [];
+									for(var keyName in mydata.data[0]){
+										console.log(keyName);
+										mydata.header.push(keyName);
+									}
+									mydata.filterProcess();
+								},
+								function (data, status, header, config) {
+									$window.alert('Failed');
+								}
+							);
+					
+				}
+				
+			});
+</script>
+</head>
+<body ng-controller="my-ctrl as mydata">
+	<div class="container" id="top">
+
+		<div>
+			<h3 class="page-header">Table</h3>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6">
+				<button type="submit" ng-click="mydata.loadExt()"
+					class="btn btn-info btn-sm">Load</button>
+				<button type="submit" ng-click="mydata.update()"
+					class="btn btn-success btn-sm">Add</button>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group has-feedback input-group-sm">
+					<input ng-model="mydata.filterText"
+						ng-change="mydata.filterProcess()" type="search"
+						class="form-control" aria-describedby="inputError2Status"
+						placeholder="filter..." aria-label="filter"> <span
+						ng-click="mydata.clearFilter()"
+						class="glyphicon glyphicon-remove form-control-feedback"
+						style="pointer-events: initial; color: #31b0d5; cursor: pointer;"></span>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div>
+				<table class="table table-hover table-condensed">
+					<thead>
+						<tr class="info">
+							<th style="cursor: pointer"
+								ng-repeat="head in mydata.header"
+								ng-click="mydata.setSorting(head)">{{head}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="row in mydata.filteredData | orderBy:mydata.sortKey:mydata.sortInvert">
+							<td ng-repeat="(key, value) in row">{{value}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div style="height: 30px;"></div>
+	<div style="width: 100%; text-align: center; vertical-align: bottom;">
+		<a href="#top">
+			<button type="button" class="btn btn-info btn-sm">
+				<span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+			</button>
+		</a>
+	</div>
+	</div>
+</body>
+</html>
