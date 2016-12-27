@@ -27,17 +27,17 @@
 				mydata.setSorting = function(key){
 					mydata.sortKey = key;
 					mydata.sortInvert = !mydata.sortInvert;
-				}
+				};
 				
 				// filter
 				mydata.filterText = null;
 				mydata.clearFilter = function(){
 					mydata.filterText = null;
 					this.filterProcess();
-				}
+				};
 				// filter processor
 				mydata.filterProcess = function() {
-					if(mydata.filterText == null || mydata.filterText == ''){
+					if(mydata.filterText === null || mydata.filterText === ''){
 						mydata.filteredData = mydata.data;
 						mydata.calcTotals();
 						return;
@@ -113,7 +113,7 @@
 								}
 							);
 					
-				}
+				};
 				
 			});
 </script>
